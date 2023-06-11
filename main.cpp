@@ -10,9 +10,8 @@ int main(){
     login = get_login();
     password = get_password();
     }
-    while (!check_login(login, password)); 
-    create_table();
-    while(action()) action();
+    while (check_user(login, password)); 
+    do action(); while (action());
     return 0;
 }
 bool action(){
@@ -27,7 +26,7 @@ bool action(){
         case 3:
             return false; 
         default:
-            std::cout << "There's not that option";
+            std::cout << "There's not that option\n";
     }
     return true;
 }
