@@ -1,6 +1,5 @@
 #include "../headers/database.h"
 #include <sstream>
-
 sqlite3 *DB;
 const char dbfile[] = {"users.db"};
 
@@ -46,16 +45,39 @@ bool check_user(std::string data, int password){
 
 int create_table(){
     int connect = connect_db(); 
-    std::string sql = "CREATE TABLE users(id INT PRIMARY KEY NOT NULL, name TEXT, password INT);";
-    
+    /* std::string sql = "CREATE TABLE users(id INT PRIMARY KEY NOT NULL, name TEXT, password INT);"; */
+    std::string sql = "CREATE TABLE books(id INTEGER PRIMARY KEY AUTOINCREMENT, titile TEXT, author TEXT, price INT)";
     char* error_message;
     connect = sqlite3_exec(DB, sql.c_str(), NULL, 0, &error_message);
     
     if (connect != SQLITE_OK)
-        std::cerr << "Error Create Table: " << error_message  << std::endl;
+        std::cerr << "error create table: " << error_message  << std::endl;
     
     sqlite3_close(DB);
     return (0);
 }
 
+int list_books(){
+    int connect = connect_db();
+    std::string sql = "SELECT * FROM books";
+    char* error_message;
+    connect = sqlite3_exec(DB, sql.c_str(), printback, 0, &error_message);
+    if (connect != SQLITE_OK)
+        std::cerr << "error list books: " << error_message << std::endl;
+    sqlite3_close(DB);
+    return 0;
+}
 
+int create_book(book bk){
+    int connect = connect_db();
+    std::stringstream s;
+    s << "INSERT INTO books VALUES(NULL, '" << bk.title << "','"<< bk.author << "'," << bk.price << ");" ;
+    std::string sql = s.str();
+    char* error_message;
+    connect = sqlite3_exec(DB, sql.c_str(), NULL, 0, &error_message);
+    if (connect != SQLITE_OK)
+        std::cerr << "error create book: " << error_message << std::endl;
+    sqlite3_close(DB);
+    return 0;
+
+}

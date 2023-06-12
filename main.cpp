@@ -14,13 +14,14 @@ int main(){
     do action(); while (action());
     return 0;
 }
+
 bool action(){
     int choice;
     std::cout << "What are you going to do?(create book(1), list all books(2), exit(3))" << std::endl;
     std::cin >> choice;
     switch (choice){
         case 1: 
-            create_book(); break;
+            create_book(get_new_book()); break;
         case 2: 
             list_books(); break;
         case 3:

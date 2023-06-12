@@ -1,7 +1,8 @@
 #ifndef BOOKS_H
 #define BOOKS_H
 #include<iostream>
-#include<fstream>
+#include"sqlite3.h"
+#include<sstream>
 
 typedef struct {
     std::string title;
@@ -9,7 +10,7 @@ typedef struct {
     int price;
 } book;
 
-book create_book();
-void list_books();
+book get_new_book();
+/* void list_books(); */
 
 #endif 
