@@ -11,7 +11,8 @@ int main(){
     password = get_password();
     }
     while (check_user(login, password)); 
-    do action(); while (action());
+    while(action()) 
+        continue;
     return 0;
 }
 
