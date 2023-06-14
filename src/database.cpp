@@ -45,8 +45,8 @@ bool check_user(std::string data, int password){
 
 int create_table(){
     int connect = connect_db(); 
-    /* std::string sql = "CREATE TABLE users(id INT PRIMARY KEY NOT NULL, name TEXT, password INT);"; */
-    std::string sql = "CREATE TABLE books(id INTEGER PRIMARY KEY AUTOINCREMENT, titile TEXT, author TEXT, price INT)";
+    std::string sql = "CREATE TABLE users(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, password INTEGER);";
+    /* std::string sql = "CREATE TABLE books(id INTEGER PRIMARY KEY AUTOINCREMENT, titile TEXT, author TEXT, price INT)"; */
     char* error_message;
     connect = sqlite3_exec(DB, sql.c_str(), NULL, 0, &error_message);
     
@@ -81,3 +81,17 @@ int create_book(book bk){
     return 0;
 
 }
+
+int create_user(std::string login, int password){
+    int connect = connect_db();
+    std::stringstream s; 
+    s << "INSERT INTO users VALUES(NULL, '" << login << "', " << password << ");";
+    std::string sql = s.str();
+    char* error_message;
+    connect = sqlite3_exec(DB, sql.c_str(), NULL, 0, &error_message);
+    if (connect != SQLITE_OK){
+            std::cout << "error create user: " << error_message << '\n';
+    }
+    return 0;
+}
+

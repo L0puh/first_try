@@ -14,4 +14,9 @@ int get_password(){
     return password; 
 }
 
-
+user_s get_user(){
+    user_s user;
+    user.login = get_login();
+    user.password = get_password();
+    return user;
+}
