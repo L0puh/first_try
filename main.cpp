@@ -4,30 +4,34 @@
 #include "headers/database.h"
 
 bool action(user_s user);
+int login(user_s *user);
 int main(){
-    //TODO: refactoring
-    int choice;
-    bool result=true;
+
     user_s user = get_user();
-    do {  
-        result = check_user(user.login, user.password);
-        if (result){
+    login(&user); 
+    while(action(user)) 
+        continue;
+    return 0;
+    
+}
+
+int login(user_s *user){
+    int choice;
+    bool result;
+    result = check_user(user->login, user->password);
+    while(!result){
             std::cout << "repeat (1) or create new account(2)?" << '\n' << '>' ;
             std::cin >> choice;
             switch(choice){
                 case 1:
-                    user = get_user();
+                    *user = get_user(); 
+                    result = check_user(user->login, user->password);
                     break;
                 case 2: 
-                    create_user(user.login, user.password);
-                    goto created_user;
+                    create_user(user->login, user->password);
+                    return 0; 
+                }
             }
-        }
-    } while (result); 
-   
-    created_user:
-    while(action(user)) 
-        continue;
     return 0;
 }
 

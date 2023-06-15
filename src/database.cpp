@@ -38,8 +38,8 @@ bool check_user(std::string data, int password){
     connect = sqlite3_exec(DB, sql.c_str(), callback, NULL, NULL); 
     sqlite3_close(DB);
     if (connect)
-        return false;
-    return true;
+        return true;
+    return false;
 }
 
 
