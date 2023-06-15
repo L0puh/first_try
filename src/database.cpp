@@ -56,6 +56,7 @@ int create_table(){
     return (0);
 }
 
+
 int list_books(){
     int connect = connect_db();
     std::string sql = "SELECT * FROM books";
@@ -67,10 +68,10 @@ int list_books(){
     return 0;
 }
 
-int create_book(book bk){
+int create_book(book_t book){
     int connect = connect_db();
     std::stringstream s;
-    s << "INSERT INTO books VALUES(NULL, '" << bk.title << "','"<< bk.author << "'," << bk.price << ");" ;
+    s << "INSERT INTO books VALUES(NULL, '" << book.title << "','"<< book.author << "'," << book.price << ");" ;
     std::string sql = s.str();
     char* error_message;
     connect = sqlite3_exec(DB, sql.c_str(), NULL, 0, &error_message);

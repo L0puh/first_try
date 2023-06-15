@@ -2,7 +2,7 @@ my first project in c++, just for practice
 
 
 ### todo:
-- [ ] get into OOP (make classes??)
+- [x] get into OOP (make classes??)
 - [x] cmake 
 
 ### set up:

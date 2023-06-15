@@ -4,13 +4,17 @@
 #include"sqlite3.h"
 #include<sstream>
 
-struct book{
+struct book_t{
     std::string title;
     std::string author;
     int price;
 };
 
-book get_new_book();
-/* void list_books(); */
+class Book {
+    private:
+        book_t book; 
+    public:
+        book_t get_new_book();
+};
 
 #endif 

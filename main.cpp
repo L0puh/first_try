@@ -37,11 +37,12 @@ int login(user_s *user){
 
 bool action(user_s user){
     int choice;
+    Book book;
     std::cout << user.login << ", your options: create book(1), list all books(2), exit(3)" << std::endl;
     std::cin >> choice;
     switch (choice){
         case 1: 
-            create_book(get_new_book()); break;
+            create_book(book.get_new_book()); break;
         case 2: 
             list_books(); break;
         case 3:

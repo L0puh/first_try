@@ -1,20 +1,15 @@
 #include "../headers/books.h"
 
-book get_new_book(){
-    using namespace std;
 
-    book bk;
-
-    cout << "Enter title" << endl << '>';
-    getline(cin >> ws, bk.title);
+book_t Book::get_new_book (){
+    std::cout << "Enter title" << std::endl << '>';
+    getline(std::cin >> std::ws, book.title);
     
-    cout << "Enter author" << endl << '>';
-    getline(cin >> ws, bk.author);
+    std::cout << "Enter author" << std::endl << '>';
+    getline(std::cin >> std::ws, book.author);
 
-    cout << "Enter price" << endl << '>';
-    cin >> bk.price;
+    std::cout << "Enter price" << std:: endl << '>';
+    std::cin >> book.price;
     
-    cout << "Book've created" << endl;
-    return bk; 
+    return book; 
 }
-
