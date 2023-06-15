@@ -1,13 +1,14 @@
 #include "../headers/database.h"
 #include <sstream>
+
 sqlite3 *DB;
 const char dbfile[] = {"users.db"};
 
 static int printback(void* sql_data, int rows, char** data, char** colum_name)
 {
-    fprintf(stderr, "%s: ", (const char*)sql_data);
     for (int i = 0; i < rows; i++) 
-        printf("%s = %s\n", colum_name[i], data[i]);
+        printf("%s: %s\n", colum_name[i], data[i]);
+    printf("\n");
     return 0;
 }
 
@@ -22,9 +23,8 @@ int connect_db(){
     
     if(connect){
         std::cerr << "error: " << sqlite3_errmsg(DB) << std::endl;
-        return -1; 
+        return 0; 
     }
-   
     return connect;
 }
 
@@ -46,7 +46,6 @@ bool check_user(std::string data, int password){
 int create_table(){
     int connect = connect_db(); 
     std::string sql = "CREATE TABLE users(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, password INTEGER);";
-    /* std::string sql = "CREATE TABLE books(id INTEGER PRIMARY KEY AUTOINCREMENT, titile TEXT, author TEXT, price INT)"; */
     char* error_message;
     connect = sqlite3_exec(DB, sql.c_str(), NULL, 0, &error_message);
     
