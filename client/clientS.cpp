@@ -30,23 +30,27 @@ void Socket::init_socket() {
 }
 
 void Socket::send_message() {
+	std::string message;
 	while (true) {
-		char message[256];
 		
-		std::cin.getline(message, sizeof(message));
-		
-		send(this->Connection, message, sizeof(message), NULL);
+		std::getline(std::cin, message);
+		int message_size = message.size();
+		send(this->Connection, (char*)&message_size, sizeof(int), NULL); // send size of msg first 
+		send(this->Connection, message.c_str(), message_size, NULL);
 	}
 }
 void Socket::recieve_message(SOCKET* Connection) {
-	while (true) {
+	int message_size;
 	
-		char msg[256];
-		int bytes = recv(*Connection, msg, sizeof(msg), NULL);
+	while (true) {
+		recv(*Connection, (char*)&message_size, sizeof(int), NULL);
+		char* msg = new char[message_size + 1];
+		msg[message_size] = '\0';
+		int bytes = recv(*Connection, msg, message_size, NULL);
 		if (bytes > 0) {
 			std::cout << msg << std::endl;
-
 		}
+		delete[] msg;
 	}
 
 }

@@ -3,6 +3,7 @@
 #include <WinSock2.h>
 #include <iostream>
 #include <vector>
+
 #pragma warning(disable:4996)
 
 struct Connection_t {
@@ -14,6 +15,7 @@ class Socket {
 
 private:
 	SOCKET Connection;
+	int index = 0;
 	std::vector<Connection_t> Connections[10];
 	
 public:
@@ -22,7 +24,7 @@ public:
 	
 private:
 	static void recieve_message(const Socket& it);
-	static  void send_message(std::vector<Connection_t> *Connections, char msg[256]);
+	static  void send_message(std::vector<Connection_t> *Connections, char msg[], int msg_size, int index);
 	
 	
 };

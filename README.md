@@ -4,3 +4,4 @@ just trying to get how things're working in cpp....
 - [ ] server: send message to specific client
 - [ ] server: clean sockets after closing connection
 - [ ] server FIX: omit messages from the same client
+- [x] server: send msg bigger than 1 byte
