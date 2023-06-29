@@ -14,6 +14,6 @@ private:
 public:
 	Socket();
 	~Socket();
-	void send_message();
+	void send_message(std::string name);
 	static void recieve_message(SOCKET *Connection); 
 };

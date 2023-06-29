@@ -38,19 +38,29 @@ Socket::~Socket() {
 }
 
 void Socket::recieve_message(const Socket& it)
-{
-	int message_size = 0; 
+{ 
+	//TODO: header
+	// name: char 
+	// message size: int 
+
+	int name_size;
+	int message_size; 
 
 	while (true) 
 	{	
+		recv(it.Connection, (char*)&name_size, sizeof(int), NULL);
+		char* name = new char[name_size + 1];
+		name[name_size] = '\0';
+
 		recv(it.Connection, (char*)&message_size, sizeof(int), NULL);
 		char* msg = new char[message_size + 1];
 		msg[message_size] = '\0';
 		
+		recv(it.Connection, name, name_size, NULL);
 		int bytes = recv(it.Connection, msg, message_size, NULL);
 			
 		if (bytes > 0) { 
-			std::cout << msg << std::endl;
+			std::cout << name << ": " << msg << std::endl;
 			std::vector<Connection_t> conns;
 			conns = *(it.Connections);
 			
@@ -61,7 +71,7 @@ void Socket::recieve_message(const Socket& it)
 			closesocket(it.Connection);
 			
 		}
-		delete[] msg;
+		delete[] msg, name;
 	}
 	
 }

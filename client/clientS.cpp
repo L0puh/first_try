@@ -29,13 +29,18 @@ void Socket::init_socket() {
 	
 }
 
-void Socket::send_message() {
+void Socket::send_message(std::string name ) {
 	std::string message;
 	while (true) {
-		
+		int name_size = name.size();
+		send(this->Connection, (char*)&name_size, sizeof(int), NULL);
+
 		std::getline(std::cin, message);
 		int message_size = message.size();
+
 		send(this->Connection, (char*)&message_size, sizeof(int), NULL); // send size of msg first 
+
+		send(this->Connection, name.c_str(), name_size, NULL);
 		send(this->Connection, message.c_str(), message_size, NULL);
 	}
 }
