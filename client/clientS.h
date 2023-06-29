@@ -9,11 +9,10 @@ class Socket {
 private:
 	SOCKET Connection;
 	void init_socket();
+	void close_socket();
 public:
 	Socket();
 	~Socket();
 	void send_message();
-	
-
-
+	static void recieve_message(SOCKET *Connection); 
 };

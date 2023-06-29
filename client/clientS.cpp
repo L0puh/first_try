@@ -4,7 +4,7 @@ Socket::Socket() {
 	this->init_socket();
 }
 Socket::~Socket() {
-	closesocket(this->Connection);
+	close_socket();
 }
 
 void Socket::init_socket() {
@@ -24,12 +24,33 @@ void Socket::init_socket() {
 	if (res == 0)
 		std::cout << "connected to the server\n";
 
+	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)recieve_message, (LPVOID)(&Connection), NULL, NULL);
+	// CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)send_message, (LPVOID)(&Connection), NULL, NULL);
+	
 }
 
 void Socket::send_message() {
-	char message[256];
-	std::cout << "enter a message: \n>";
-	std::cin.getline(message, sizeof(message));
-	send(this->Connection, message, sizeof(message), NULL);
+	while (true) {
+		char message[256];
+		
+		std::cin.getline(message, sizeof(message));
+		
+		send(this->Connection, message, sizeof(message), NULL);
+	}
+}
+void Socket::recieve_message(SOCKET* Connection) {
+	while (true) {
+	
+		char msg[256];
+		int bytes = recv(*Connection, msg, sizeof(msg), NULL);
+		if (bytes > 0) {
+			std::cout << msg << std::endl;
 
+		}
+	}
+
+}
+void Socket::close_socket() {
+	closesocket(this->Connection);
+	WSACleanup();	
 }
