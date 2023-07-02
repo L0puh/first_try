@@ -13,8 +13,7 @@ int main (){
     struct addrinfo hints, *res;
     memset(&hints, 0, sizeof(hints));
     hints.ai_socktype = SOCK_STREAM;
-    hints.ai_family = AF_INET;
-    hints.ai_protocol = 0;
+    hints.ai_family = AF_UNSPEC;
     hints.ai_flags = AI_PASSIVE;
     if (getaddrinfo(NULL, "3490", &hints, &res) != 0){
         std::cout << "error in getaddrinfo:\n" << gai_strerror(status) << '\n';
@@ -31,6 +30,7 @@ int main (){
     char str_addr[INET_ADDRSTRLEN];
     void *addr = &(((struct sockaddr_in *)res->ai_addr)->sin_addr);
     std::cout << "socket binded to: " << inet_ntop(res->ai_family, addr, str_addr, sizeof(str_addr)) << '\n';
+     
     return 0;
 }
 
