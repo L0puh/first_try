@@ -11,7 +11,7 @@ private:
 	SOCKET Connection;
 	void init_socket();
 	void close_socket();
-public:
+public:	
 	Socket();
 	~Socket();
 	void send_message(std::string name);
