@@ -25,11 +25,6 @@ int main () {
     }
     std::cout<<"client is connected!\n";
 
-    char *buffer;
-    int len;
-    len = sizeof(buffer);
-    int bytes_recv = recv(sock, buffer, len, 0);
-    std::cout << "message: " << buffer << '\n';
     close(conn);
     return 0;
 }
