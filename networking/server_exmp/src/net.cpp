@@ -1,4 +1,4 @@
-#include "net.h"
+#include "../headers/net.h"
 
 struct addrinfo init_addrinfo(struct addrinfo hints){
     size_t size_hints = sizeof(hints);

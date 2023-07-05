@@ -1,4 +1,4 @@
-#include "net.cpp"
+#include "headers/net.h"
 
 int create_socket(struct addrinfo *servinfo, struct addrinfo *p, int sockfd){
     int res, yes = 1;
