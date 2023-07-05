@@ -1,4 +1,5 @@
 #include "headers/net.h"
+#include <sys/socket.h>
 
 int create_socket(struct addrinfo *servinfo, struct addrinfo *p, int sockfd){
     int res, yes = 1;
@@ -61,17 +62,32 @@ int main () {
                 get_in_addr((struct sockaddr *)&their_addr), s, sizeof(s));
         printf("connection from: %s\n", s);
 
-        if(!fork()){
+        pid_t thread = fork();
+        if(!thread){
             close(sockfd);
-            res = send(sockfd_new, "Hello, world", 13, 0);
-            if (print_error(res))
+
+            int msg_size;
+            while(true) {
+            recv(sockfd_new, (char*)&msg_size, sizeof(int), 0);
+            char* msg = new char[msg_size+1];
+            msg[msg_size] = '\0';
+            
+            int bytes_sent = recv(sockfd_new, msg, msg_size, 0);
+            if (bytes_sent > 0 ){
+                printf("msg from client: %s (size: %d bytes)\n", msg, msg_size);
+            } else {
+                print_error(bytes_sent);
+                close(sockfd_new);
                 exit(1);
-            close(sockfd_new);
-            return 0;
+            }
+             
+            delete[] msg; 
+
+            }
         }
     }
 
-return 0;
+    return 0;
 }
 
 

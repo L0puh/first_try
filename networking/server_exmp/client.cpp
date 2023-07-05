@@ -1,5 +1,6 @@
 #include "headers/net.h"
 #include <netdb.h>
+#include <string>
 #include <sys/socket.h>
 
 
@@ -34,13 +35,18 @@ int main () {
     int sockfd = connect_socket(servinfo);
 
     char buffer[MAXDATASIZE];
-    int bytes_recv = recv(sockfd, buffer, MAXDATASIZE-1, 0);
-    if (print_error(bytes_recv)){
-        close(sockfd);
-        exit(1);
+    while (true) {
+        
+        std::string message;
+        std::getline(std::cin, message);
+        int message_size = message.size();
+        int bytes_sent = send(sockfd, (char *)&message_size, sizeof(int), 0);
+        bytes_sent = send(sockfd, message.c_str(), message_size, 0);
+        if (print_error(bytes_sent)){
+            close(sockfd);
+            exit(1);
+        }
     }
-    buffer[bytes_recv] = '\0';
-    printf("message from server: %s\n", buffer);
     close(sockfd);
     return 0;
 }
