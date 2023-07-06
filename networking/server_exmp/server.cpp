@@ -1,14 +1,18 @@
 #include "headers/net.h"
 #include <vector>
 #include <thread>
+#include <mutex>
 
+std::mutex mtx;
 struct connection_t {
     int index;
     int socketfd;
 };
+
 void recv_messages(int current_socket);
 
 std::vector<connection_t> connections;
+
 int create_socket(struct addrinfo *servinfo, struct addrinfo *p, int sockfd){
     int res, yes = 1;
     for (p = servinfo; p != NULL; p = p->ai_next){
@@ -64,9 +68,8 @@ int main () {
     for (int i = 0; i != BACKLOG; i ++){
         sin_size = sizeof(their_addr);
         int sockfd_new = accept(sockfd, (struct sockaddr *)&their_addr, &sin_size);
-        if (print_error(sockfd_new)){
+        if (print_error(sockfd_new))
             continue;
-        }
 
 
         connection_t conn;
@@ -86,23 +89,31 @@ int main () {
 void recv_messages(int current_socket){
         int msg_size;   
             while (true) {
-                recv(current_socket, (char*)&msg_size, sizeof(int), 0);
-            
-                char* msg = new char[msg_size+1];
-                msg[msg_size] = '\0';
-                
-                int bytes_sent = recv(current_socket, msg, msg_size, 0);
-                if (bytes_sent > 0 ){
+                int bytes_recv = recv(current_socket, (char*)&msg_size, sizeof(int), 0);
+                if (bytes_recv > 0 ){
+                    char* msg = new char[msg_size+1];
+                    msg[msg_size] = '\0';
+                    bytes_recv = recv(current_socket, msg, msg_size, 0);
                     printf("msg from client(%d): %s (size: %d bytes)\n", current_socket, msg, msg_size);
+                    delete[] msg; 
+                }
+                else if (bytes_recv == 0 ){
+                    printf("client(%d) is over\n", current_socket);
+                    mtx.lock();
+                    std::vector<connection_t>::iterator itr = connections.begin();
+                    while (itr != connections.end()){
+                        if (itr->socketfd == current_socket){
+                            itr = connections.erase(itr);
+                        } else {
+                            itr++;
+                        }
+                    }
+                    mtx.unlock();
+                    close(current_socket);
                 }
                 else {
-                    print_error(bytes_sent);
                     close(current_socket);
-                    exit(1);
                 }
-                 
-            delete[] msg; 
-        
         }
     }
 

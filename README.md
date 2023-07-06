@@ -8,4 +8,5 @@ just trying to get how things're working in cpp....
 - [x] server FIX: omit messages from the same client
 ### networking:
 - [ ] network: send packages instead of messages
-- [ ] network: fix quiting the client (server crashes)
+- [x] network: fix quiting the client (server crashes)
+- [ ] network: fix sending data 
