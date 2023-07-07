@@ -1,19 +1,19 @@
 #include "headers/net.h"
-#include <vector>
-#include <thread>
-#include <mutex>
 
 std::mutex mtx;
+
 struct connection_t {
     int index;
     int socketfd;
 };
 
+std::vector<connection_t> connections;
+
+void send_msg(std::string msg, int current_socket);
 void handle_client(int current_socket);
 void close_connection(int current_socket, bool *is_over);
 int create_socket(struct addrinfo *servinfo, struct addrinfo *p, int sockfd);
-
-std::vector<connection_t> connections;
+void send_msg(char* msg, int msg_size, int current_socket);
 
 int main () {
     struct addrinfo hints, *servinfo, *p;
@@ -27,7 +27,6 @@ int main () {
     
     int sockfd;
     sockfd = create_socket(servinfo, p, sockfd); 
-     
     res = listen(sockfd, BACKLOG);
     
     if (print_error(res))
@@ -52,7 +51,7 @@ int main () {
             inet_ntop(their_addr.sin_family, 
                     get_in_addr((struct sockaddr *)&their_addr), s, sizeof(s));
             printf("connection from: %s\n", s);
-            
+            send_msg("server: new connection", sockfd_new);
             std::thread client(handle_client, sockfd_new);   
             client.detach();
         } 
@@ -69,14 +68,47 @@ void handle_client(int current_socket){
                     char* msg = new char[msg_size+1];
                     msg[msg_size] = '\0';
                     bytes_recv = recv(current_socket, msg, msg_size, 0);
-                    printf("msg from client(%d): %s (size: %d bytes)\n", current_socket, msg, msg_size);
+                    send_msg(msg, msg_size, current_socket);
                     delete[] msg; 
+
                 } else 
                     is_over = false;
             }
         close_connection(current_socket, &is_over);
 }
+void send_msg(char* msg, int msg_size, int current_socket){
+    mtx.lock();
+    for (auto itr = connections.begin(); itr != connections.end(); itr++){
+       if (current_socket != itr->socketfd) { 
+           int bytes_sent = send(itr->socketfd, &msg_size, sizeof(int), 0); 
+           bytes_sent = send(itr->socketfd, msg, msg_size, 0); 
+           if (print_error(bytes_sent))
+               exit(1);
+           printf("message(%d bytes) sent to %dth client: %s\n", bytes_sent, itr->index, msg);
+       } else if (connections.size() == 1){
+           char msg[26] = "server: the room is empty";
+           int msg_size = sizeof(msg);
+           int bytes_sent = send(itr->socketfd, &msg_size, sizeof(int), 0); 
+           bytes_sent = send(itr->socketfd, msg, msg_size, 0); 
+       } 
+    }
+    mtx.unlock();
+}
 
+void send_msg(std::string msg, int current_socket){
+    mtx.lock();
+    size_t msg_size = sizeof(msg);
+    for (auto itr = connections.begin(); itr != connections.end(); itr++){
+       if (current_socket != itr->socketfd) { 
+           int bytes_sent = send(itr->socketfd, &msg_size, sizeof(int), 0); 
+           bytes_sent = send(itr->socketfd, msg.c_str(), msg_size, 0); 
+           if (print_error(bytes_sent))
+               exit(1);
+           printf("message(%d bytes) sent to %dth client: %s\n", bytes_sent, itr->index, msg.c_str());
+        }
+    }
+    mtx.unlock();
+}
 void close_connection(int current_socket, bool *is_over){
     printf("client(%d) is over\n", current_socket);
     std::vector<connection_t>::iterator itr = connections.begin();
@@ -85,6 +117,7 @@ void close_connection(int current_socket, bool *is_over){
             mtx.lock();
             itr = connections.erase(itr);
             mtx.unlock();
+            send_msg("server: someone has disconnected", current_socket);
             *is_over=true;
         } else 
             itr++;

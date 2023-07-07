@@ -1,6 +1,9 @@
 #ifndef NET_H
 #define NET_H
 
+#include <vector>
+#include <thread>
+#include <mutex>
 #include <csignal>
 #include <stdio.h>
 #include <stdlib.h>

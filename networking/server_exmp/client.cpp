@@ -3,7 +3,60 @@
 #include <string>
 #include <sys/socket.h>
 
+int send_msg(int sockfd);
+int recv_msg(int sockfd);
+int connect_socket(struct addrinfo *servinfo);
 
+
+int main () {
+    struct addrinfo hints, *servinfo;
+    int res, sockfd;
+    
+    hints = init_addrinfo(hints);
+    res = getaddrinfo(NULL, PORT, &hints, &servinfo);
+    if (print_error(res))
+        exit(1);
+    
+    sockfd = connect_socket(servinfo);
+
+    
+    std::thread recvth(recv_msg, sockfd);
+    std::thread sndth(send_msg, sockfd);
+    sndth.join();
+    recvth.join();
+    
+    close(sockfd);
+    return 0;
+}
+
+int send_msg(int sockfd){
+    std::string message;
+    while (true) {
+        std::getline(std::cin, message);
+        int message_size = message.size();
+        int bytes_sent = send(sockfd, (char *)&message_size, sizeof(int), 0);
+        bytes_sent = send(sockfd, message.c_str(), message_size, 0);
+        if (print_error(bytes_sent)){
+            close(sockfd);
+            exit(1);
+        }
+    }
+    return 0;
+}
+int recv_msg(int sockfd){
+    while (true){  
+        int msg_size, bytes_recv;
+        bytes_recv = recv(sockfd, &msg_size, sizeof(int), 0);
+        char *msg = new char[msg_size+1];
+        msg[msg_size]='\0';
+        bytes_recv = recv(sockfd, msg, msg_size, 0);
+        if (print_error(bytes_recv))
+            exit(1);
+        printf("> %s\n", msg);
+        delete[] msg;
+    }
+    return 0;
+}
 int connect_socket(struct addrinfo *servinfo) {
     int sockfd;
     struct addrinfo *p;
@@ -25,30 +78,4 @@ int connect_socket(struct addrinfo *servinfo) {
     freeaddrinfo(servinfo);
     return sockfd;
 }
-
-int main () {
-    struct addrinfo hints, *servinfo;
-    hints = init_addrinfo(hints);
-    int res = getaddrinfo(NULL, PORT, &hints, &servinfo);
-    if (print_error(res))
-        exit(1);
-    int sockfd = connect_socket(servinfo);
-
-    char buffer[MAXDATASIZE];
-    while (true) {
-        
-        std::string message;
-        std::getline(std::cin, message);
-        int message_size = message.size();
-        int bytes_sent = send(sockfd, (char *)&message_size, sizeof(int), 0);
-        bytes_sent = send(sockfd, message.c_str(), message_size, 0);
-        if (print_error(bytes_sent)){
-            close(sockfd);
-            exit(1);
-        }
-    }
-    close(sockfd);
-    return 0;
-}
-
 
