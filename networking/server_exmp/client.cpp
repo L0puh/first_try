@@ -6,7 +6,7 @@
 int send_msg(int sockfd);
 int recv_msg(int sockfd);
 int connect_socket(struct addrinfo *servinfo);
-
+int send_name(int sockfd);
 
 int main () {
     struct addrinfo hints, *servinfo;
@@ -19,7 +19,7 @@ int main () {
     
     sockfd = connect_socket(servinfo);
 
-    
+    send_name(sockfd); 
     std::thread recvth(recv_msg, sockfd);
     std::thread sndth(send_msg, sockfd);
     sndth.join();
@@ -29,6 +29,20 @@ int main () {
     return 0;
 }
 
+
+int send_name(int sockfd){
+    printf("enter you name:\n");
+    std::string name;
+    std::getline(std::cin, name);
+    size_t message_size = name.size();
+    int bytes_sent = send(sockfd, (char *)&message_size, sizeof(int), 0);
+    bytes_sent = send(sockfd, name.c_str(), message_size, 0);
+    if (print_error(bytes_sent)){
+        close(sockfd);
+        exit(1);
+    }
+    return 0;
+}
 int send_msg(int sockfd){
     std::string message;
     while (true) {
