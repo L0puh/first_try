@@ -22,8 +22,37 @@
 #define MAXDATASIZE 100
 
 struct addrinfo init_addrinfo(struct addrinfo hints);
-bool print_error(int res);
 void *get_in_addr (struct sockaddr *sa);
+bool print_error(int res);
+
+struct connection_t {
+    int index;
+    std::string name;
+    int socketfd;
+};
+
+class Server{
+    private:
+        std::mutex mtx;
+        struct sockaddr_in their_addr;
+        char s[INET_ADDRSTRLEN];
+        int sockfd, sockfd_client, res;
+        std::vector<connection_t> connections;
+        struct addrinfo hints, *servinfo, *p;
+        
+        void handle_client(int current_socket, std::string current_name);
+        std::string recv_name(int current_socket);
+        void send_msg(std::string msg, int current_socket);
+        void close_connection(int current_socket, bool *is_over);
+        void send_msg(char* msg, int current_socket, std::string current_name);
+        void listen_server();
+        int create_socket();
+    
+    public: 
+        Server();
+        ~Server();
+};
+
 
 
 #endif
