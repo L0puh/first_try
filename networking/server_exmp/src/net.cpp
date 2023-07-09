@@ -80,7 +80,6 @@ std::string Server::recv_name(int current_socket){
 void Server::handle_client(int current_socket, std::string current_name){
         int msg_size, bytes_recv;
         bool is_over = false;   
-
         while ((bytes_recv = recv(current_socket, (char*)&msg_size, sizeof(int), 0)) != 0 && !is_over) {
                 if (bytes_recv > 0 ) { 
                     char* msg = new char[msg_size+1];
@@ -88,49 +87,52 @@ void Server::handle_client(int current_socket, std::string current_name){
                     bytes_recv = recv(current_socket, msg, msg_size, 0);
                     send_msg(msg, current_socket, current_name);
                     delete[] msg; 
-
                 } else 
                     is_over = false;
             }
         close_connection(current_socket, &is_over);
 }
+void Server::send_msg(std::string msg, int current_socket, std::vector<connection_t>::iterator it){
+   size_t msg_size = msg.size();
+   int bytes_sent = send(it->socketfd, &msg_size, sizeof(int), 0); 
+   bytes_sent = send(it->socketfd, msg.c_str(), msg_size, 0); 
+   if (print_error(bytes_sent))
+       exit(1);
+   printf("message from %s (%d bytes) sent to %dth client\n", s,  bytes_sent, it->index);
+}
+
+std::string Server::get_username(std::string *message){
+    std::string name;
+    message->erase(message->begin()); 
+    for (int i = 0; message->at(i) != ' '; i++){
+        name = name + message->at(i);
+    }
+    message->erase(0, name.size()+1);
+    return name;
+}
+
 void Server::send_msg(char* msg, int current_socket, std::string current_name){
     mtx.lock();
     std::string strmsg = msg;
     for (auto itr = connections.begin(); itr != connections.end(); itr++){
        if (current_socket != itr->socketfd ) { 
-           if (strmsg.at(0) == '/' ){ // private msg: /<username> message
-              std::string message = strmsg;
-              message.erase(message.begin()); 
-              std::string name;
-              for (int i = 0; message.at(i) != ' '; i++){
-                  name = name + message.at(i);
-              }
-              message.erase(0, name.size()+1);
-              if (itr->name == name){
+            if (strmsg.at(0) == '/' ){ // private msg: /<username> message
+            std::string message = strmsg;
+            std::string name = get_username(&message);
+            
+            if (itr->name == name){
                    std::string private_msg = "<private> " + current_name + ": " + message;
-                   size_t msg_size = private_msg.size();
-                   int bytes_sent = send(itr->socketfd, &msg_size, sizeof(int), 0); 
-                   bytes_sent = send(itr->socketfd, private_msg.c_str(), msg_size, 0); 
-                   if (print_error(bytes_sent))
-                       exit(1);
-                   printf("!private message from %s (%d bytes) sent to %dth client\n", s,  bytes_sent, itr->index);
+                   send_msg(private_msg, current_socket, itr);
                    break;
-              } continue;
+              } 
+              continue;
            } else {  
                std::string nmsg = current_name + ": " + strmsg;
-               size_t msg_size = nmsg.size();
-               int bytes_sent = send(itr->socketfd, &msg_size, sizeof(int), 0); 
-               bytes_sent = send(itr->socketfd, nmsg.c_str(), msg_size, 0); 
-               if (print_error(bytes_sent))
-                   exit(1);
-               printf("message from %s (%d bytes) sent to %dth client\n", s,  bytes_sent, itr->index);
+               send_msg(current_name+": "+strmsg, current_socket, itr);
            }
        } else if (connections.size() == 1){
-           char msg[26] = "server: the room is empty";
-           int msg_size = sizeof(msg);
-           int bytes_sent = send(itr->socketfd, &msg_size, sizeof(int), 0); 
-           bytes_sent = send(itr->socketfd, msg, msg_size, 0); 
+           std::string msg = "server: the room is empty";
+           send_msg(msg, current_socket, itr);
        } 
     }
     mtx.unlock();

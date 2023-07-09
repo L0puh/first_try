@@ -42,12 +42,14 @@ class Server{
         
         void handle_client(int current_socket, std::string current_name);
         std::string recv_name(int current_socket);
-        void send_msg(std::string msg, int current_socket);
         void close_connection(int current_socket, bool *is_over);
-        void send_msg(char* msg, int current_socket, std::string current_name);
         void listen_server();
         int create_socket();
-    
+        
+        std::string get_username(std::string *message);
+        void send_msg(std::string msg, int current_socket, std::vector<connection_t>::iterator it);
+        void send_msg(std::string msg, int current_socket);
+        void send_msg(char* msg, int current_socket, std::string current_name);
     public: 
         Server();
         ~Server();
