@@ -1,5 +1,4 @@
 #include "../headers/net.h"
-
 Server::Server(){
     listen_server();
     while(true) {
@@ -97,15 +96,36 @@ void Server::handle_client(int current_socket, std::string current_name){
 }
 void Server::send_msg(char* msg, int current_socket, std::string current_name){
     mtx.lock();
+    std::string strmsg = msg;
     for (auto itr = connections.begin(); itr != connections.end(); itr++){
        if (current_socket != itr->socketfd ) { 
-           std::string nmsg = current_name + ": " + msg;
-           size_t msg_size = nmsg.size();
-           int bytes_sent = send(itr->socketfd, &msg_size, sizeof(int), 0); 
-           bytes_sent = send(itr->socketfd, nmsg.c_str(), msg_size, 0); 
-           if (print_error(bytes_sent))
-               exit(1);
-           printf("message from %s (%d bytes) sent to %dth client\n", s,  bytes_sent, itr->index);
+           if (strmsg.at(0) == '/' ){ // private msg: /<username> message
+              std::string message = strmsg;
+              message.erase(message.begin()); 
+              std::string name;
+              for (int i = 0; message.at(i) != ' '; i++){
+                  name = name + message.at(i);
+              }
+              message.erase(0, name.size()+1);
+              if (itr->name == name){
+                   std::string private_msg = "<private> " + current_name + ": " + message;
+                   size_t msg_size = private_msg.size();
+                   int bytes_sent = send(itr->socketfd, &msg_size, sizeof(int), 0); 
+                   bytes_sent = send(itr->socketfd, private_msg.c_str(), msg_size, 0); 
+                   if (print_error(bytes_sent))
+                       exit(1);
+                   printf("!private message from %s (%d bytes) sent to %dth client\n", s,  bytes_sent, itr->index);
+                   break;
+              } continue;
+           } else {  
+               std::string nmsg = current_name + ": " + strmsg;
+               size_t msg_size = nmsg.size();
+               int bytes_sent = send(itr->socketfd, &msg_size, sizeof(int), 0); 
+               bytes_sent = send(itr->socketfd, nmsg.c_str(), msg_size, 0); 
+               if (print_error(bytes_sent))
+                   exit(1);
+               printf("message from %s (%d bytes) sent to %dth client\n", s,  bytes_sent, itr->index);
+           }
        } else if (connections.size() == 1){
            char msg[26] = "server: the room is empty";
            int msg_size = sizeof(msg);

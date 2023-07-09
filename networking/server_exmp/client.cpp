@@ -1,7 +1,4 @@
 #include "headers/net.h"
-#include <netdb.h>
-#include <string>
-#include <sys/socket.h>
 
 int send_msg(int sockfd);
 int recv_msg(int sockfd);
