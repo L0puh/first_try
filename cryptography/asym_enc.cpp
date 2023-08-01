@@ -7,49 +7,52 @@ the asymmetric encryption.
 #include <math.h>
 #include <string>
 
+long generate_key(){
+    return rand() % 99999999999999999;
+}
+
 class Bob{
-    uint session_key;
-    int Alice_key, kor, mod;
+    ulong session_key;
+    long Alice_key, primitive, mod;
     public:
-        Bob(int Alice_key, int kor, int mod);
-        int init();
-        void send_bob(int mesg[], int mes_size);
+        Bob(long Alice_key, long primitive, long mod);
+        long init();
+        void send_bob(long mesg[], long mes_size);
 };
-void Bob::send_bob(int mes[], int msg_size){
+void Bob::send_bob(long mes[], long msg_size){
     std::string message;
-    for (int i=0; i!=msg_size; i++){
+    for (long i=0; i!=msg_size; i++){
         char sym = mes[i] ^ session_key;
         message += sym;
     }
-    printf("message: %s\n", message.c_str());
+    printf("message: %s\n | key : %lu\n", message.c_str(), session_key);
 }
-int Bob::init(){
-    const int secret_key = 8;
-    int k = pow (kor, secret_key); 
-    int Bob_key = k % mod;
-
-    session_key = (int)pow( Alice_key, secret_key) % mod;
+long Bob::init(){
+    const long secret_key = generate_key();
+    long k = pow (primitive, secret_key); 
+    long Bob_key = k % mod;
+    session_key = (long)pow( Alice_key, secret_key) % mod;
     return Bob_key;
 }
-Bob::Bob(int Ak, int k, int m){
+Bob::Bob(long Ak, long k, long m){
     Alice_key = Ak;
-    kor = k;
+    primitive = k;
     mod = m;
 }
 
 int main () {
-    const int secret_key = 13; 
-    int kor = 2; int mod = 25;
-    int Alice_key = (int)pow(kor, secret_key) % mod; // open key
+    const long secret_key = generate_key(); 
+    long primitive = generate_key(); long mod = generate_key();
+    long Alice_key = (long)pow(primitive, secret_key) % mod; // open key
 
-    Bob bob(Alice_key, kor, mod);
-    int Bob_key= bob.init();
+    Bob bob(Alice_key, primitive, mod);
+    long Bob_key= bob.init();
     
-    uint session_key = (int)pow( Bob_key, secret_key ) % mod;
+    ulong session_key = (long)pow( Bob_key, secret_key ) % mod;
     std::string message;
     std::getline(std::cin, message);
-    int c_message[message.size()];
-    for (int i=0; i != message.size(); i++) {
+    long c_message[message.size()];
+    for (long i=0; i != message.size(); i++) {
         c_message[i] = ( message.at(i) ^ session_key);
     }
     bob.send_bob(c_message, message.size());
