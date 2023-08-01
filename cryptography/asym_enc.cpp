@@ -20,7 +20,6 @@ void Bob::send_bob(int mes[], int msg_size){
     for (int i=0; i!=msg_size; i++){
         char sym = mes[i] ^ session_key;
         message += sym;
-
     }
     printf("message: %s\n", message.c_str());
 }
@@ -29,7 +28,7 @@ int Bob::init(){
     int k = pow (kor, secret_key); 
     int Bob_key = k % mod;
 
-    session_key = (int)pow(pow(kor, Alice_key), secret_key) % mod;
+    session_key = (int)pow( Alice_key, secret_key) % mod;
     return Bob_key;
 }
 Bob::Bob(int Ak, int k, int m){
@@ -46,11 +45,10 @@ int main () {
     Bob bob(Alice_key, kor, mod);
     int Bob_key= bob.init();
     
-    uint session_key = (int)pow((pow(kor, Bob_key)), secret_key ) % mod;
+    uint session_key = (int)pow( Bob_key, secret_key ) % mod;
     std::string message;
     std::getline(std::cin, message);
     int c_message[message.size()];
-
     for (int i=0; i != message.size(); i++) {
         c_message[i] = ( message.at(i) ^ session_key);
     }
