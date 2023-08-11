@@ -11,12 +11,21 @@ void update(const uint8_t *msg, size_t msg_size){
 }
 
 void pad(){
-    uint64_t i = data_size;
     uint8_t end = 64;
-    data[i++] = 0x80; //1 bit
+    data[data_size++] = 0x80; //1 bit
     
-    while(i < end) 
-        data[i++] = 0x00; // 0 bit
+    while(data_size < end) 
+        data[data_size++] = 0x00; // 0 bit
+
+    uint64_t bitlen = data_size * 8;
+	data[63] = bitlen;
+	data[62] = bitlen >> 8;
+	data[61] = bitlen >> 16;
+	data[60] = bitlen >> 24;
+	data[59] = bitlen >> 32;
+	data[58] = bitlen >> 40;
+	data[57] = bitlen >> 48;
+	data[56] = bitlen >> 56;
 }
 
 int main () {
