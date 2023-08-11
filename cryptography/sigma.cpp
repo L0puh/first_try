@@ -28,7 +28,6 @@ int main () {
         std::cout << "choice  " << choice(x[i]) << "\n";
         std::cout << "major   " <<major(x[i]) << '\n';
         std::cout << c << "       " << x[i]<< "\n\n";
-
         i++;
     }
     return 0;
