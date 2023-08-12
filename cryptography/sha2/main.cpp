@@ -6,7 +6,6 @@ int main () {
     std::string data;
     std::getline(std::cin, data);
     
-
     sha2.init();
     sha2.update(reinterpret_cast<const uint8_t*> (data.c_str()), data.size());
 

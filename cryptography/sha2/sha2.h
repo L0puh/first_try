@@ -38,7 +38,6 @@ class SHA2 {
         void revert(uint8_t *hash);
 
     private:
-        // TODO: 
         uint32_t rotr(uint32_t x, uint32_t n);
         uint32_t choose(uint32_t a, uint32_t b, uint32_t c);
         uint32_t majority(uint32_t a, uint32_t b, uint32_t c);

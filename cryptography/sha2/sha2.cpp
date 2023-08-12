@@ -1,4 +1,5 @@
 #include "sha2.h"
+#include <iostream>
 
 
 void SHA2::init() {
@@ -29,11 +30,51 @@ void SHA2::update(const uint8_t *data_in, size_t data_size){
 
 void SHA2::transform(){
     uint32_t maj, xorA, xorE, choice, sum, newA, newE, splitted_data[64];
-    uint32_t new_state[8];
-    for(uint8_t i=0, j=0; i<16; i++, j+= 4){
+
+    for(uint8_t i=0, j=0; i< 16; i++, j+= 4){
         splitted_data[i] = (data[j] << 24) | (data[j + 1] << 16 ) | (data[j + 2] << 8) | (data[j + 3]);
     }
-    //TODO
+    for (uint8_t i = 16; i < 64; i++) {
+        splitted_data[i] = sigma0(splitted_data[i-2]) + splitted_data[i-7] \
+            + sigma1(splitted_data[ i-15 ]) + splitted_data[i-16];
+    }
+    for (uint8_t i=0; i < 64; i++) {
+        maj  = majority(state[0], state[1], state[2]);
+        std::cout << maj << ' ';
+        xorA = rotr(state[0], 2) ^ rotr(state[0], 13) ^ rotr(state[0], 22);
+        xorE = rotr(state[4], 6) ^ rotr(state[4], 11) ^ rotr(state[4], 25);
+        
+        choice = choose( state[4], state[5], state[6] );
+        sum = splitted_data[i] + K[i] + state[7] + choice + xorE;
+        
+        newA = xorA + maj + sum;
+        newE = state[3] + sum;
+		
+        state[7] = state[6];
+		state[6] = state[5];
+		state[5] = state[4];
+		state[4] = newE;
+		state[3] = state[2];
+		state[2] = state[1];
+		state[1] = state[0];
+		state[0] = newA;
+    }
+}
+
+uint32_t SHA2::choose(uint32_t a, uint32_t b, uint32_t c) {
+    return (a & b) ^ (~a & c);
+}
+uint32_t SHA2::majority(uint32_t a, uint32_t b, uint32_t c) {
+	return (a & (b | c)) | (b & c);
+}
+uint32_t SHA2::sigma0(uint32_t x) {
+    return rotr(x, 7) ^ rotr(x, 18) ^ (x>>3);
+}
+uint32_t SHA2::sigma1(uint32_t x) {
+    return rotr(x, 17) ^ rotr(x, 19) ^ (x >> 10);
+}
+uint32_t SHA2::rotr(uint32_t x, uint32_t n) {
+    return (x >> n) | (x << (32 - n));
 }
 
 uint8_t* SHA2::get_hash(){
@@ -45,14 +86,13 @@ uint8_t* SHA2::get_hash(){
 
 void SHA2::pad() {
     uint64_t i = blocklen;
-    data[i++] = 0x80;
-    uint8_t end = 56;
-    if (blocklen >= 64) end = 64;
+    uint8_t end = 64;
+    if (blocklen < 56) end = 56;
 
+    data[i++] = 0x80;
     while(i < end) data[i++] = 0x00;
-    
-    if(end == 56) {
-        data[i++] = 0x00;
+     
+    if(end >= 56) {
         transform();
         memset(data, 0, 56);
     }    
