@@ -5,4 +5,7 @@ just trying to get how things're working in cpp....
 - [networking projects in unix](https://github.com/L0puh/first_try_cpp/tree/master/networking):
     - [converter ip](https://github.com/L0puh/first_try_cpp/blob/master/networking/convert_ip.cpp) 
     - [client - server example](https://github.com/L0puh/first_try_cpp/tree/master/networking/server_exmp)
-- [cryptography](https://github.com/L0puh/first_try_cpp/tree/master/cryptography)
+- [cryptography](https://github.com/L0puh/first_try_cpp/tree/master/cryptography) 
+    - [CRC](https://github.com/L0puh/first_try_cpp/tree/master/cryptography/CRC)
+    - [SHA2](https://github.com/L0puh/first_try_cpp/tree/master/cryptography/sha2)
+    - [asynchronous encryption](https://github.com/L0puh/first_try_cpp/blob/master/cryptography/asym_enc.cpp)
