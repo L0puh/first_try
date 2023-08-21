@@ -7,15 +7,15 @@ ulong add(ulong a, ulong x, ulong n) {
     ulong s = 1;
     while(x) {
         if (x & 1) 
-            s = (s * x) % n;
+            s = (s * a) % n;
 
         x = (x >> 1);
-        x = (x * x) % n;
+        a = (a * a) % n;
     }
     return s;
 }
 int main () {
     // 18 ^ 49 mod 23
-    std::cout << add(18, 49, 23) << '\n';
+    std::cout << add(14, 49, 23) << '\n';
     return 0;
 }
