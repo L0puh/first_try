@@ -1,7 +1,6 @@
 #include <iostream>
 #include <sys/types.h>
 
-
 ulong add(ulong a, ulong x, ulong n) {
     // a ^ x mod n
     ulong s = 1;
