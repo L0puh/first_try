@@ -1,15 +1,19 @@
 #include <cmath>
 #include <cstdlib>
+#include <ctime>
 #include <numeric>
 #include <stdio.h>
 #include <stdlib.h>
-#include <system_error>
+#include <random>
+#include <string>
 #include <vector>
 
-int public_key, private_key;
 
+void print_vector(std::vector<unsigned> msg);
+std::string decode(std::vector<unsigned> c_msg, int n, int d);
+std::vector<unsigned> encode(std::string message, int n, int e);
+int modular_pow(int base, int modulus, int exponent);
 unsigned get_prime();
-unsigned encode(unsigned message, int n, int key);
 bool is_prime(int n);
 
 int main () {
@@ -17,41 +21,70 @@ int main () {
     
     p = get_prime();
     q = get_prime();
-    n = p * q;
+
+    n = p * q; 
     fi=(p-1)*(q-1);
     
     int e=get_prime();
     while(std::gcd(e, fi) != 1) 
         e++;
     
-    public_key=e;
-    
-    unsigned d=get_prime();
-    while((d * e) % fi != 0) {
+    int d = 1;
+    while ((d * e) % fi != 1) {
         d++;
     }
 
-    private_key = d;
+    std::string message = "hello world!";
+    std::vector<unsigned> c_msg = encode(message, n, e);
+    print_vector(c_msg);
+    printf("%s\n", decode(c_msg, n, d).c_str());
 
-    printf("pub:  %d\npriv: %d\nn: %d\n", public_key, private_key, n);
-    unsigned c = encode(32, n, public_key);
-    unsigned m = encode(c, n, private_key);
-    printf("encoded: %u, decoded: %u\n", c, m); 
     return 0;
+    
 }
 
-unsigned encode(unsigned message, int n, int key) {
-    unsigned res=0;
-    res = std::fmod(std::pow(message, key), n);
-    return res;
+void print_vector(std::vector<unsigned> msg) {
+    for (auto itr=msg.begin(); itr != msg.end(); itr++){
+        printf("%d", *itr);
+    }
+}
+std::string decode(std::vector<unsigned> c_msg, int n, int d) {
+    std::string msg;
+    for (auto itr=c_msg.begin(); itr != c_msg.end(); itr++){
+        char c = modular_pow(*itr, n, d);
+        msg += c;
+    }
+    printf("\n\n");
+    return msg;
+}
+std::vector<unsigned> encode(std::string message, int n, int e){
+    std::vector<unsigned> ciph;
+    for (const char c: message) {
+        ciph.push_back(modular_pow(c, n, e));
+    }
+    print_vector(ciph);
+    return ciph;
 }
 
-unsigned get_prime() 
-{
-    std::srand(time(0));
+int modular_pow(int base, int modulus, int exponent) {
+    int result = 1;
+    while (exponent > 0) {
+        if (exponent % 2 == 1) {
+            result = (result * base) % modulus;
+        }
+        exponent = exponent >> 1;
+        base = (base * base) % modulus;
+    }
+    return result;
+}
+
+unsigned get_prime() {
+    std::random_device rd;
+    std::mt19937 generator(rd());
+    std::uniform_int_distribution<int> distribution(10, 100);
     unsigned r = 0;
     while (!is_prime(r)) {
-        r = std::rand() % 100;
+        r = distribution(generator);
     }
     return r;
 }
