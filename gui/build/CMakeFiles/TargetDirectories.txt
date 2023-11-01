@@ -1,0 +1,6 @@
+/home/lopuh/Documents/coding/first_try/gui_app/test/build/CMakeFiles/app.dir
+/home/lopuh/Documents/coding/first_try/gui_app/test/build/CMakeFiles/edit_cache.dir
+/home/lopuh/Documents/coding/first_try/gui_app/test/build/CMakeFiles/rebuild_cache.dir
+/home/lopuh/Documents/coding/first_try/gui_app/test/build/imgui/CMakeFiles/imgui.dir
+/home/lopuh/Documents/coding/first_try/gui_app/test/build/imgui/CMakeFiles/edit_cache.dir
+/home/lopuh/Documents/coding/first_try/gui_app/test/build/imgui/CMakeFiles/rebuild_cache.dir

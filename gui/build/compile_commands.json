@@ -1,0 +1,32 @@
+[
+{
+  "directory": "/home/lopuh/Documents/coding/first_try/gui_app/test/build",
+  "command": "/usr/bin/c++  -I/home/lopuh/Documents/coding/first_try/gui_app/test -std=gnu++11 -o CMakeFiles/app.dir/main.cpp.o -c /home/lopuh/Documents/coding/first_try/gui_app/test/main.cpp",
+  "file": "/home/lopuh/Documents/coding/first_try/gui_app/test/main.cpp",
+  "output": "CMakeFiles/app.dir/main.cpp.o"
+},
+{
+  "directory": "/home/lopuh/Documents/coding/first_try/gui_app/test/build/imgui",
+  "command": "/usr/bin/c++   -std=gnu++11 -o CMakeFiles/imgui.dir/imgui.cpp.o -c /home/lopuh/Documents/coding/first_try/gui_app/test/imgui/imgui.cpp",
+  "file": "/home/lopuh/Documents/coding/first_try/gui_app/test/imgui/imgui.cpp",
+  "output": "imgui/CMakeFiles/imgui.dir/imgui.cpp.o"
+},
+{
+  "directory": "/home/lopuh/Documents/coding/first_try/gui_app/test/build/imgui",
+  "command": "/usr/bin/c++   -std=gnu++11 -o CMakeFiles/imgui.dir/imgui_demo.cpp.o -c /home/lopuh/Documents/coding/first_try/gui_app/test/imgui/imgui_demo.cpp",
+  "file": "/home/lopuh/Documents/coding/first_try/gui_app/test/imgui/imgui_demo.cpp",
+  "output": "imgui/CMakeFiles/imgui.dir/imgui_demo.cpp.o"
+},
+{
+  "directory": "/home/lopuh/Documents/coding/first_try/gui_app/test/build/imgui",
+  "command": "/usr/bin/c++   -std=gnu++11 -o CMakeFiles/imgui.dir/imgui_draw.cpp.o -c /home/lopuh/Documents/coding/first_try/gui_app/test/imgui/imgui_draw.cpp",
+  "file": "/home/lopuh/Documents/coding/first_try/gui_app/test/imgui/imgui_draw.cpp",
+  "output": "imgui/CMakeFiles/imgui.dir/imgui_draw.cpp.o"
+},
+{
+  "directory": "/home/lopuh/Documents/coding/first_try/gui_app/test/build/imgui",
+  "command": "/usr/bin/c++   -std=gnu++11 -o CMakeFiles/imgui.dir/imgui_impl_glfw_gl3.cpp.o -c /home/lopuh/Documents/coding/first_try/gui_app/test/imgui/imgui_impl_glfw_gl3.cpp",
+  "file": "/home/lopuh/Documents/coding/first_try/gui_app/test/imgui/imgui_impl_glfw_gl3.cpp",
+  "output": "imgui/CMakeFiles/imgui.dir/imgui_impl_glfw_gl3.cpp.o"
+}
+]
