@@ -1,32 +1,18 @@
-cmake_minimum_required(VERSION 3.6)
-project(app)
+cmake_minimum_required(VERSION 3.0)
 
-set(CMAKE_CXX_STANDARD 11)
-set(APP app)
+project(my_app)
 
-add_subdirectory(imgui)
-include_directories(${PROJECT_SOURCE_DIR})
-
-add_executable(${APP} main.cpp)
-target_link_libraries(${APP} imgui)
-
-# glfw
-find_package(glfw3 REQUIRED)
-include_directories(${GLFW_INCLUDE_DIRS})
-link_libraries(${GLFW_LIBRARY_DIRS})
-
-# opengl
 find_package(OpenGL REQUIRED)
-include_directories(${OPENGL_INCLUDE_DIRS})
 
-# glew
-find_package(GLEW REQUIRED)
-include_directories(${GLEW_INCLUDE_DIRS})
+link_directories(libs/glfw)
+include_directories(libs/imgui)
+include_directories(libs/glfw)
+# include_directories(include)
 
-target_link_libraries(
-        ${APP}
-        glfw
-        ${OPENGL_LIBRARIES}
-        ${GLEW_LIBRARIES}
-        ${EXTRA_LIBS}
-)
+file(GLOB_RECURSE SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
+add_executable(my_app ${SOURCES})
+
+target_link_libraries(my_app PRIVATE ${OPENGL_gl_LIBRARY})
+target_link_libraries(my_app PRIVATE glfw)
+
+# file(COPY resources DESTINATION /)
