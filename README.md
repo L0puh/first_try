@@ -7,4 +7,6 @@
 - [cryptography](https://github.com/L0puh/first_try_cpp/tree/master/cryptography) 
     - [CRC](https://github.com/L0puh/first_try_cpp/tree/master/cryptography/CRC)
     - [SHA2](https://github.com/L0puh/first_try_cpp/tree/master/cryptography/sha2)
-    - [asynchronous encryption](https://github.com/L0puh/first_try_cpp/blob/master/cryptography/asym_enc.cpp)
+    - [asymmetric encryption](https://github.com/L0puh/first_try_cpp/blob/master/cryptography/asym_enc.cpp)
+- [gui](https://github.com/L0puh/first_try/tree/master/gui) - using imgui lib (glfw + opengl3)
+- 
