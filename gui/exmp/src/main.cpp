@@ -29,23 +29,36 @@ int main(int argc, char** argv) {
     flags |= ImGuiWindowFlags_NoMove;
     flags |= ImGuiWindowFlags_AlwaysAutoResize;
 
-
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-
+        {
+            ImGui::Begin("menu", 0, flags);
+            if(ImGui::Button("close")){
+                return 0;
+            }
+            ImGui::End();
+        }
         ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x * 0.5f,
                              io.DisplaySize.y * 0.5f),
                              ImGuiCond_Always, ImVec2(0.5f,0.5f));
-        ImGui::Begin("centered window", 0,  flags);
-        ImGui::Text("example text");
-        ImGui::End();
-
-        ImGui::Begin("window2", 0,  flags);
-        ImGui::Button("button");
-        ImGui::End();
+        {
+            ImGui::Begin("window", 0,  flags);
+            if(ImGui::Button("button")) {
+                ImGui::OpenPopup("button");
+            }
+            if( ImGui::BeginPopup("button", ImGuiWindowFlags_AlwaysAutoResize)) {
+                    float window_width = ImGui::GetWindowWidth();
+                    float window_height = ImGui::GetWindowHeight();
+                    ImGui::Text("popuh example text!!");
+                    if (ImGui::Button("ok"))
+                        ImGui::CloseCurrentPopup();
+                    ImGui::EndPopup();
+            }
+            ImGui::End();
+        }
         ImGui::Render();
 
         glClear(GL_COLOR_BUFFER_BIT);
