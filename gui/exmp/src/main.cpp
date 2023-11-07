@@ -33,12 +33,28 @@ int main(int argc, char** argv) {
         glfwPollEvents();
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
+        // popup menu
         ImGui::NewFrame();
         {
             ImGui::Begin("menu", 0, flags);
             if(ImGui::Button("close")){
                 return 0;
+            } 
+
+            if(ImGui::Button("menu")){
+                ImGui::OpenPopup("menu");
             }
+            if (ImGui::BeginPopup("menu", ImGuiWindowFlags_AlwaysAutoResize)){
+                if(ImGui::BeginMenu("menu")){
+                    if(ImGui::MenuItem("close", "Alt+F4")){return 0;};
+                    static bool target = false;
+                    ImGui::MenuItem("item", nullptr, &target);
+                    ImGui::Checkbox("check", &target);
+                    ImGui::EndMenu();
+                }
+                ImGui::EndPopup();
+            }
+             
             ImGui::End();
         }
         ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x * 0.5f,
