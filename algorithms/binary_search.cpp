@@ -1,41 +1,45 @@
+#include <cstdio>
 #include <iostream>
+#include <string>
+#include <valarray>
+#include <vector>
 
-int dic[] = {'a', 'b', 'c', 'd', 'e', 'm','o', 'q'};
 
-int binary_search(char target, int size) {
-    int low=0;
-    int high = size;
-
-    while(low <= high) {
-       
-        int mid = low + (high - low) / 2;
-        
-        if (target == dic[mid]) 
+int bin_search(int target, std::vector<int> nums){
+    int low = 0;
+    int high = nums.size()-1;
+    int mid;
+    while (low <= high){
+        mid = (low + high) / 2;
+        if (nums[mid] < target) {
+            low = mid+1;  
+        } else if (nums[mid] > target){
+            high = mid-1;
+        } else if (nums[mid] == target){
             return mid;
-
-        if (dic[mid] > target) 
-            high = mid - 1;          
-        else 
-            low = mid + 1;
+        }
+        printf("low:%d\nhigh:%d\nmid:%d\n\n", low, high, mid);
     }
+    return mid;
 
-    return 0;
 }
-int binary_search(char target, int start, int end) {
-    int mid = start + end / 2;
-
-    if (dic[mid] == target) 
-        return mid;
-
-    if (dic[mid] > target) 
-        return binary_search(target, start, mid-1);
-    else
-        return binary_search(target, mid+1, end);
+int bin_search_recursive(int target, std::vector<int> nums, int high, int low){
+    int mid = (high+low)/2;
+    if (high <= low) return -1;
+    if (nums.at(mid) == target) return mid;
+    if (nums.at(mid) > target)
+        return bin_search_recursive(target, nums, mid, low);
+    else return bin_search_recursive(target, nums, high, mid);
 }
 
 int main () {
-    std::cout << binary_search('c', 1, 7); 
-    std::cout << binary_search('c', 7); 
+    int num = 0; 
+    printf("enter a num[1-10]: ");
+    std::cin >> num;
+    std::vector<int> nums = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    int res = bin_search_recursive(num, nums, nums.size()-1, 0);
+    printf("the %d element is in %d position\n", num, res);
+
 
     return 0;
 }

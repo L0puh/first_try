@@ -1,41 +1,38 @@
-#include <iostream>
+#include <vector>
+#include <cstdio>
 
-int data[] = {3, 5, 2, 3, 1, 9, 4, 10, 3};
 
-void swap(int *a, int *b) {
-    int c = *a; 
-    *a = *b;
-    *b = c;
+std::vector<int> quick_sort(std::vector<int> list){
+    if (list.size() < 2) return list;
+    std::vector<int> greater;
+    std::vector<int> smaller;
+
+    int pivot = list[0];
+    for (int i = 1; i != list.size(); i++)
+    {
+        if (list.at(i) > pivot)
+            greater.push_back(list.at(i));
+        else 
+            smaller.push_back(list.at(i));
+    }
+    std::vector<int> s;
+    if (!smaller.empty()){
+        s = quick_sort(smaller);
+    }
+    s.push_back(pivot);
+    if (!greater.empty()){
+        std::vector<int> g = quick_sort(greater);
+        s.insert(s.end(), g.begin(), g.end());
+    }
+    return s;
 }
 
-int partition(int low, int high){ 
-    int pivot = data[high];
-    int i = low-1;
-    for (int k=low; k < high; k++) {
-        if (data[k] <= pivot) {
-            i++;
-            swap(&data[i], &data[k]);
-        }
+int main() {
+    std::vector<int> nums = {3241, 23, 3, 43, 2, 34, 3, 53, 2, 134};
+    nums = quick_sort(nums);
+    for (const auto& i: nums){
+        printf("%d\t", i);
     }
-    swap(&data[i+1], &data[high]);
-    return i + 1;
-}
-int quick_sort(int low, int high) {
-
-    if (low < high) {
-        int pivot = partition(low, high); 
-        quick_sort(pivot+1, high);
-        quick_sort(low, pivot-1);
-    }
+    printf("\n");
     return 0;
-}
-
-
-int main () {
-    int size = sizeof(data) / sizeof(data[0]);
-
-    quick_sort(0, size-1);
-    for (int i=0; i != size;  i++) {
-        std::cout << data[i] << '\t'; 
-    } 
 }
