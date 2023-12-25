@@ -8,11 +8,8 @@ const float infinity = std::numeric_limits<float>::infinity();
 typedef std::vector<std::pair<std::string, float>> neighbor ;
 std::vector<std::string> processed;
 
-void updated(std::map<std::string, std::string> parents, std::map<std::string, float> cost, float new_cost){
+void updated(std::map<std::string, float> cost, float new_cost){
     printf("NEW COST: %0.f\n", new_cost);
-    for (auto& p:parents) {
-        printf("node: %s, parent: %s\n", p.first.c_str(), p.second.c_str());
-    }
     for (auto& c:cost) {
         printf("node: %s, cost: %0.f\n", c.first.c_str(), c.second);
     }
@@ -42,9 +39,9 @@ std::string find_lowest_cost(std::map<std::string, float> costs){
 
 int main() {
     std::map<std::string, neighbor> graph{
-        {"start", {{"a", 2}, {"b", 6}}},
-        {"a", {{"fin", 1}}},
-        {"b", {{"a", 3}, {"fin", 5}}},
+        {"start", {{"a", 5}, {"b", 2}}},
+        {"a", {{"fin", 2}}},
+        {"b", {{"a", 1}, {"fin", 4}}},
         {"fin", {} }
     };
     std::map<std::string, float> costs {
@@ -52,11 +49,6 @@ int main() {
         {"b", 2},
         {"fin", infinity}
 
-    };
-    std::map<std::string, std::string> parents {
-        {"a", "start"},
-        {"b", "start"},
-        {"fin", ""}
     };
     float new_cost = 0;
     std::string node = find_lowest_cost(costs);
@@ -67,8 +59,7 @@ int main() {
             new_cost = cost + n.second;
             if (costs[n.first] > new_cost){
                 costs[n.first] = new_cost;
-                parents[n.first] = node;
-                updated(parents, costs, new_cost);
+                updated(costs, new_cost);
             }
         }
         processed.push_back(node);

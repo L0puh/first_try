@@ -3,7 +3,7 @@
 #include <string>
 #include <valarray>
 #include <vector>
-
+#include "algo.h"
 
 int bin_search(int target, std::vector<int> nums){
     int low = 0;
