@@ -1,5 +1,13 @@
 /*
 min cost path (DP)
+
+1. get total sum of the first row
+and the first column 
+2. fill up the next ones simply 
+checking whether the i-1 or j-1 is
+greater. 
+3. the answer is in ans[rows-1][cols-1]
+       
 */
 
 #include <bits/c++io.h>
