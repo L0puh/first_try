@@ -5,8 +5,6 @@ struct item {
     int value;
 };
 
-
-
 int main() {
     int w, v, max, size, mix;
     item knapsack[size];
@@ -22,7 +20,6 @@ int main() {
         for (int j = 0; j <= max; j++){
             if (i == 0 || j == 0) 
                 grid[i][j] = 0;
-
             else if (knapsack[i-1].weight <= j){
                 mix = knapsack[i-1].value + grid[i-1][j - knapsack[i-1].weight],
                 grid[i][j] = std::max(mix, grid[i-1][j]); // maximum of the current item + with item less weight
