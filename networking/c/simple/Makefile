@@ -7,7 +7,7 @@ all: $(patsubst %.c, $(RUN_DIR)/%, $(SOURCES))
 
 $(BUILD_DIR)/%.o: %.c
 	mkdir -p $(BUILD_DIR)
-	$(CC) -c -o $@ $< -Iinclude
+	$(CC) -c -o $@ $< -Iinclude -Idaytime/include
 
 $(RUN_DIR)/%: $(BUILD_DIR)/%.o
 	mkdir -p $(RUN_DIR)

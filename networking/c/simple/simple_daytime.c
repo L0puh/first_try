@@ -12,7 +12,6 @@
 
 #define MAXLINE 4028
 
-
 int8_t is_ipv4(char* ip){
    struct addrinfo info, *res;
    bzero(&info, sizeof(info));
@@ -45,15 +44,15 @@ int main(int argc, char *argv[]){
 
    int sockfd, bytes;
    char buffer[MAXLINE+1];
-   struct sockaddr_in6 servaddr;
+   struct sockaddr_in servaddr;
    
-   sockfd = socket(AF_INET6, SOCK_STREAM, 0);
+   sockfd = socket(AF_INET, SOCK_STREAM, 0);
    assert(sockfd > 0);
   
    bzero(&servaddr, sizeof(servaddr));
-   servaddr.sin6_family = AF_INET6;
-   servaddr.sin6_port = htons(13);
-   assert(inet_pton(AF_INET6, ip, &servaddr.sin6_addr) > 0);
+   servaddr.sin_family = AF_INET;
+   servaddr.sin_port = htons(13);
+   assert(inet_pton(AF_INET, ip, &servaddr.sin_addr) > 0);
    int status = connect(sockfd, (const struct sockaddr *)&servaddr, sizeof(servaddr));
    if (status < 0) printf("error in connection: %s\n", strerror(errno));
 
@@ -61,6 +60,5 @@ int main(int argc, char *argv[]){
       buffer[bytes] = '\0';
       printf("%d bytes recieved from %s: %s\n", bytes, ip, buffer);
    }
-
    return 0;
 }

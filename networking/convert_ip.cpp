@@ -16,7 +16,6 @@ int main (int argc, char *argv[]){
         std::cout << "error in getaddrinfo: " << gai_strerror(status) << '\n';
         exit(1);
     }
-    
     std::cout << "getaddrinfo is working!\n";
     char ipstr[INET_ADDRSTRLEN];
     for (struct addrinfo *p = res; p != NULL; p = res->ai_next){
