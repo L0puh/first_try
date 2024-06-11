@@ -1,3 +1,6 @@
 [submodule "networking/networking/c/daytime"]
 	path = networking/networking/c/daytime
 	url = https://github.com/L0puh/daytime.git
+[submodule "networking/c/daytime"]
+	path = networking/c/daytime
+	url = https://github.com/L0puh/daytime.git
