@@ -1,9 +1,17 @@
 /*************************
-   little script to see 
-   the format of endian.
+ *      PLAYGROUND       *
+ *   WITH BYTES && BITS  *
  ************************/
 
 #include <stdio.h>
+
+void print_bit(unsigned int a, size_t size);
+
+int any_odd_one(unsigned x){
+   for (int i = 1; i < sizeof(x); i+=2)
+      if (x >> i == 1) return 1;
+   return 0;
+}
 
 void print_bit(unsigned int a, size_t size ){
     putchar('0');
@@ -22,17 +30,8 @@ void print_bytes(unsigned char* a, size_t size){
    putchar('\n');
 }
 
-void print_int(int x){
-   print_bytes((unsigned char*) &x, sizeof(int));
-}
-void print_float(float x){
-   print_bytes((unsigned char*) &x, sizeof(float));
-}
-void print_ptr(void* x){
-   print_bytes((unsigned char*) &x, sizeof(void*));
-}
-
 int main() {
+   if(any_odd_one(4)) printf("ANY ODD ONE\n");
    int x = 0x89ABCDEF;
    int y = 0x76543210;
    printf("%x\n", (x&0xFF)|(y&~0xFF));
@@ -44,14 +43,6 @@ int main() {
       print_bit(number, 10);
       printf("%d %u\n", number, (unsigned int)number);
    }
-   /* print_bytes((unsigned char*)&i, sizeof(int)); */
-   i = -i;
-   /* print_bytes((unsigned char*)&i, sizeof(int)); */
-   int exp = 0xFF;
-   /* printf("A: 0x%.8x\n", x & exp); */
-   /* printf("B: 0x%.8x\n", x ^ ~exp); */
-   /* printf("C: 0x%.8x\n", (x & ~(exp)) | exp); */
-   /* printf("C: 0x%.8x\n", x | exp); */
    
    return 0;
 }
