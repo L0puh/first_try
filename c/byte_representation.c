@@ -33,6 +33,10 @@ void print_ptr(void* x){
 }
 
 int main() {
+   int x = 0x89ABCDEF;
+   int y = 0x76543210;
+   printf("%x\n", (x&0xFF)|(y&~0xFF));
+   
    short i = 12345;
    int number = 1;
    while (number > 0){
@@ -43,7 +47,6 @@ int main() {
    /* print_bytes((unsigned char*)&i, sizeof(int)); */
    i = -i;
    /* print_bytes((unsigned char*)&i, sizeof(int)); */
-   int x = 0x87654321;  
    int exp = 0xFF;
    /* printf("A: 0x%.8x\n", x & exp); */
    /* printf("B: 0x%.8x\n", x ^ ~exp); */
