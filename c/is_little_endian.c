@@ -1,19 +1,17 @@
 #include <stdio.h>
 
-int is_little_endian(){
-   int a = 1;
+int is_little_endian(int a){
    char* addr = (char*) &a;
-   if ((int)addr[0] == 1) printf("big endian: 0x "); 
-   else printf("little endian: 0x ");
    for (int i = 0; i < sizeof(int); i++){
       printf("%.2x ", addr[i]);
+   }
+   if ((int)addr[0] == 1) printf("| big endian\n"); 
+   else { 
+      printf("| little endian\n");
+      return 1;
    }
    putchar('\n');
    return 0;
 }
 
 
-int main() {
-   is_little_endian();
-   return 0;
-}
