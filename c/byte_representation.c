@@ -57,8 +57,11 @@ void print_bytes(unsigned char* a, size_t size){
    putchar('\n');
 }
 
-int main() {
 
+int main() {
+   int a = 10;
+   printf("%lu %lu\n", sizeof(&a), sizeof(a));
+   printf("%d\n", (1<<6)-(1<<3)-1);
    if(any_odd_one(2)) printf("ANY ODD IS ONE\n");
    if(any_eq_one (255, 32)) printf("ANY EQUALS 1\n");
    if(any_eq_zero(255, 32)) printf("ANY EQUALS 0\n");

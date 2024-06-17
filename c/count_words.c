@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,7 +7,7 @@
 
 int main (int argc, char* argv[]) {
    if (argc == 1) return -1;
-   int current_max = MAX_STRING, 
+   uint64_t current_max = MAX_STRING, 
        count = 0;
    char ch, *string;
    FILE *file;
@@ -19,7 +20,13 @@ int main (int argc, char* argv[]) {
       string[count] = ch;
       count++;
       if (count >= current_max) {
-         char *cp = malloc(sizeof(char)*count);
+         long long req_size = (long long)sizeof(char)*count;
+         size_t size = req_size;
+         if (req_size != size || req_size/sizeof(char) != count){
+            printf("detected overflow\n");
+            exit(-1);
+         }
+         char *cp = malloc(size);
          strcpy(cp, string);
          current_max += MAX_STRING;
          string = malloc(sizeof(char)*current_max);
