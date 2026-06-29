@@ -5,6 +5,8 @@ PROGS = $(SRCS:%.s=$(BUILD_DIR)/%.out)
 
 AS = as
 LD = ld
+ASFLAGS = -g --32
+LDFLAGS = -m elf_i386
 
 all: ${PROGS}
 
@@ -12,10 +14,10 @@ $(BUILD_DIR):
 	mkdir -p $@
 
 $(BUILD_DIR)/%.o: %.s | $(BUILD_DIR)
-	${AS} -c -o $@ $<
+	${AS} ${ASFLAGS} -c -o $@ $<
 
 $(BUILD_DIR)/%.out: $(BUILD_DIR)/%.o
-	${LD} -o $@ $<
+	${LD} ${LDFLAGS} -o $@ $<
 
 clean:
 	rm -rf $(BUILD_DIR)
